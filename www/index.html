@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>famo.us App</title>
+        <meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+        <!-- module loader -->
+        <script type="text/javascript" src="lib/require.js"></script>
+        <script type="text/javascript" src="lib/famous.min.js"></script>
+        <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="lib/underscore.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="lib/famous.css" />
+        <script type="text/javascript">
+            require.config({baseUrl: 'js/'});
+            require(['application'])
+        </script>
+
+        <!-- app code -->
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+    </head>
+    <body></body>
+</html>
