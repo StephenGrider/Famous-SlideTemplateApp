@@ -1,4 +1,4 @@
-class Card 
+class Card
   constructor: ->
     mainContext = Famous.Engine.createContext()
 
