@@ -9,6 +9,7 @@ define( (require, exports, module) ->
   window.Famous.StateModifier = require('famous/modifiers/StateModifier')
   window.Famous.Easing = require('famous/transitions/Easing')
   window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout")
+  window.Famous.Views.GridLayout = require("famous/views/GridLayout")
 
   context = Famous.Engine.createContext()
   context.add(new MainView().layout)
