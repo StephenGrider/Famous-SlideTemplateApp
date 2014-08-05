@@ -1,16 +1,20 @@
-class Card
+class MainView
   constructor: ->
-    mainContext = Famous.Engine.createContext()
+    @layout = new Famous.Views.HeaderFooterLayout
+      headerSize: 100
+      footerSize: 50
 
-    logo = new Famous.ImageSurface
-      size: [200, 200]
-      content: 'http://code.famo.us/assets/famous_logo.svg'
-      classes: ['double-sided']
+    # @createHeader()
+    @createContent()
+    # @createFooter()
 
-    initialTime = Date.now()
-    centerSpin = new Famous.Modifier
-      origin: [0.5, .5]
-      transform: ->
-        Famous.Transform.rotateY(.002 * (Date.now() - initialTime))
+  createHeader: ->
+    # surface = new Famous.Surface()
+    #
+    # @layout.add(new Famous.Surface())
 
-    mainContext.add(centerSpin).add(logo)
+  createContent: ->
+    content = new Famous.Surface
+      content: 'yeaaa'
+
+    @layout.content.add(content)
