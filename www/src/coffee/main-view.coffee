@@ -1,4 +1,4 @@
-class MainView
+class Slidey.Views.MainView
   constructor: ->
     @layout = new Famous.Views.HeaderFooterLayout
       headerSize: 100
@@ -20,6 +20,6 @@ class MainView
     @layout.content.add(content)
 
   createFooter: ->
-    footer = new FooterGrid()
+    footer = new Slidey.Views.FooterGridView()
 
-    @layout.footer.add(footer.layout)
+    @layout.footer.add(footer.view)

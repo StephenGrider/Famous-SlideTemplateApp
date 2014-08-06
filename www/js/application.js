@@ -1,6 +1,4 @@
-var MainView;
-
-MainView = (function() {
+Slidey.Views.MainView = (function() {
   function MainView() {
     this.layout = new Famous.Views.HeaderFooterLayout({
       headerSize: 100,
@@ -22,8 +20,8 @@ MainView = (function() {
 
   MainView.prototype.createFooter = function() {
     var footer;
-    footer = new FooterGrid();
-    return this.layout.footer.add(footer.layout);
+    footer = new Slidey.Views.FooterGridView();
+    return this.layout.footer.add(footer.view);
   };
 
   return MainView;
@@ -45,32 +43,50 @@ define(function(require, exports, module) {
   window.Famous.Easing = require('famous/transitions/Easing');
   window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout");
   window.Famous.Views.GridLayout = require("famous/views/GridLayout");
+  window.Famous.View = require('famous/core/View');
   context = Famous.Engine.createContext();
-  return context.add(new MainView().layout);
+  return context.add(new Slidey.Views.MainView().layout);
 });
 
-var FooterGrid;
-
-FooterGrid = (function() {
-  function FooterGrid() {
+Slidey.Views.FooterGridView = (function() {
+  function FooterGridView() {
+    this.view = new Famous.View();
     this.surfaces = [];
-    this.layout = new Famous.Views.GridLayout({
+    this.gridLayout = new Famous.Views.GridLayout({
       dimensions: [3, 1]
     });
-    this.layout.sequenceFrom(this.surfaces);
+    this.gridLayout.sequenceFrom(this.surfaces);
+    this.view.add(this.gridLayout);
     this.buildSequence();
   }
 
-  FooterGrid.prototype.buildSequence = function() {
-    var surface;
-    surface = new Famous.Surface({
+  FooterGridView.prototype.buildSequence = function() {
+    var surface1, surface2, surface3;
+    surface1 = new Famous.Surface({
       content: 'sup',
+      origin: [.5, .5],
       size: [void 0, void 0],
       textAlign: 'center'
     });
-    return this.surfaces.push(surface);
+    surface2 = new Famous.Surface({
+      content: 'yo',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    surface3 = new Famous.Surface({
+      content: 'blah',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    this.surfaces.push(surface1);
+    this.surfaces.push(surface2);
+    return this.surfaces.push(surface3);
   };
 
-  return FooterGrid;
+  return FooterGridView;
 
 })();
+
+

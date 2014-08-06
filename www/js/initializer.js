@@ -1,0 +1,4 @@
+window.Slidey =
+  {
+    Views: {}
+  }

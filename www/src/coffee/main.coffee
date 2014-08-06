@@ -10,7 +10,8 @@ define( (require, exports, module) ->
   window.Famous.Easing = require('famous/transitions/Easing')
   window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout")
   window.Famous.Views.GridLayout = require("famous/views/GridLayout")
+  window.Famous.View = require('famous/core/View')
 
   context = Famous.Engine.createContext()
-  context.add(new MainView().layout)
+  context.add(new Slidey.Views.MainView().layout)
 )
