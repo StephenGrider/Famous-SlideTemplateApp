@@ -12,15 +12,14 @@ Slidey.Views.MainView = (function() {
 
   MainView.prototype.createContent = function() {
     var content;
-    content = new Famous.Surface({
-      content: 'yeaaa'
-    });
-    return this.layout.content.add(content);
+    content = new Slidey.Views.CardStackView;
+    return this.layout.content.add(content.view);
   };
 
   MainView.prototype.createFooter = function() {
     var footer;
     footer = new Slidey.Views.FooterGridView();
+    window.a = footer;
     return this.layout.footer.add(footer.view);
   };
 
@@ -31,12 +30,16 @@ Slidey.Views.MainView = (function() {
 define(function(require, exports, module) {
   var context;
   if (window.Famous == null) {
-    window.Famous = {};
+    window.Famous = {
+      Modifiers: {}
+    };
   }
   window.Famous.Views = {};
   window.Famous.Engine = require('famous/core/Engine');
   window.Famous.Surface = require('famous/core/Surface');
   window.Famous.Modifier = require('famous/core/Modifier');
+  window.Famous.Modifiers.Draggable = require("famous/modifiers/Draggable");
+  window.Famous.Modifiers.StateModifier = require("famous/modifiers/StateModifier");
   window.Famous.Transform = require('famous/core/Transform');
   window.Famous.ImageSurface = require('famous/surfaces/ImageSurface');
   window.Famous.StateModifier = require('famous/modifiers/StateModifier');
@@ -47,6 +50,65 @@ define(function(require, exports, module) {
   context = Famous.Engine.createContext();
   return context.add(new Slidey.Views.MainView().layout);
 });
+
+Slidey.Views.CardStackView = (function() {
+  function CardStackView() {
+    var card, i, _i;
+    this.view = new Famous.View();
+    for (i = _i = 0; _i <= 3; i = ++_i) {
+      card = new Slidey.Views.CardView;
+      this.view.add(card.view);
+    }
+  }
+
+  return CardStackView;
+
+})();
+
+Slidey.Views.CardView = (function() {
+  function CardView() {
+    this.addView();
+    this.showSurface();
+  }
+
+  CardView.prototype.addView = function() {
+    return this.view = new Famous.View();
+  };
+
+  CardView.prototype.showSurface = function() {
+    var draggable, mod, surface, trans;
+    surface = new Famous.Surface({
+      content: 'im a card',
+      origin: [.5, .5],
+      size: [150, 150],
+      classes: ['card'],
+      textAlign: 'center'
+    });
+    draggable = new Famous.Modifiers.Draggable({
+      xRange: [-100, 200],
+      yRange: [-100, 200]
+    });
+    surface.pipe(draggable);
+    mod = new Famous.Modifiers.StateModifier;
+    trans = {
+      method: 'snap',
+      period: 300,
+      dampingRatio: 0.3,
+      velocity: 0
+    };
+    surface.on('end', function() {
+      console.log('done');
+      return draggable.setPosition([0, 0, 0], trans);
+    });
+    this.view.add(mod).add(draggable).add(surface);
+    return surface.on('click', function() {
+      return console.log('hi');
+    });
+  };
+
+  return CardView;
+
+})();
 
 Slidey.Views.FooterGridView = (function() {
   function FooterGridView() {

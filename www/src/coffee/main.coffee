@@ -1,9 +1,15 @@
 define( (require, exports, module) ->
-  window.Famous ?= {}
+  window.Famous ?= {
+    Modifiers: {}
+  }
+
   window.Famous.Views = {}
   window.Famous.Engine = require('famous/core/Engine')
   window.Famous.Surface = require('famous/core/Surface')
   window.Famous.Modifier = require('famous/core/Modifier')
+  window.Famous.Modifiers.Draggable = require("famous/modifiers/Draggable")
+  window.Famous.Modifiers.StateModifier = require("famous/modifiers/StateModifier")
+
   window.Famous.Transform = require('famous/core/Transform')
   window.Famous.ImageSurface = require('famous/surfaces/ImageSurface')
   window.Famous.StateModifier = require('famous/modifiers/StateModifier')

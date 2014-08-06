@@ -14,12 +14,11 @@ class Slidey.Views.MainView
     # @layout.add(new Famous.Surface())
 
   createContent: ->
-    content = new Famous.Surface
-      content: 'yeaaa'
+    content = new Slidey.Views.CardStackView
 
-    @layout.content.add(content)
+    @layout.content.add(content.view)
 
   createFooter: ->
     footer = new Slidey.Views.FooterGridView()
-
+    window.a = footer
     @layout.footer.add(footer.view)
