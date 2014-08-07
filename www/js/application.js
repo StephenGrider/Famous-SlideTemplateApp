@@ -6,6 +6,7 @@ Slidey.Views.MainView = (function() {
     });
     this.createContent();
     this.createFooter();
+    window.a = this;
   }
 
   MainView.prototype.createHeader = function() {};
@@ -19,7 +20,6 @@ Slidey.Views.MainView = (function() {
   MainView.prototype.createFooter = function() {
     var footer;
     footer = new Slidey.Views.FooterGridView();
-    window.a = footer;
     return this.layout.footer.add(footer.view);
   };
 
@@ -53,13 +53,24 @@ define(function(require, exports, module) {
 
 Slidey.Views.CardStackView = (function() {
   function CardStackView() {
-    var card, i, _i;
     this.view = new Famous.View();
+    this.showCards();
+  }
+
+  CardStackView.prototype.showCards = function() {
+    var card, i, _i, _results;
+    _results = [];
     for (i = _i = 0; _i <= 3; i = ++_i) {
       card = new Slidey.Views.CardView;
-      this.view.add(card.view);
+      card.view.on('card:exit', this.onCardExit);
+      _results.push(this.view.add(card.view));
     }
-  }
+    return _results;
+  };
+
+  CardStackView.prototype.onCardExit = function() {
+    return console.log('recorded exit!');
+  };
 
   return CardStackView;
 
@@ -96,14 +107,12 @@ Slidey.Views.CardView = (function() {
       dampingRatio: 0.3,
       velocity: 0
     };
-    surface.on('end', function() {
-      console.log('done');
-      return draggable.setPosition([0, 0, 0], trans);
-    });
     this.view.add(mod).add(draggable).add(surface);
-    return surface.on('click', function() {
-      return console.log('hi');
-    });
+    return surface.on('click', (function(_this) {
+      return function() {
+        return _this.view.trigger('card:exit');
+      };
+    })(this));
   };
 
   return CardView;

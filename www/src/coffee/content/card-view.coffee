@@ -29,13 +29,8 @@ class Slidey.Views.CardView
       velocity: 0
     }
 
-    surface.on('end', ->
-      console.log('done')
-      draggable.setPosition([0,0,0], trans)
-    )
-
     @view.add(mod).add(draggable).add(surface)
 
-    surface.on('click', ->
-      console.log('hi')
+    surface.on('click', =>
+      @view.trigger('card:exit')
     )

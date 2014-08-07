@@ -7,6 +7,7 @@ class Slidey.Views.MainView
     # @createHeader()
     @createContent()
     @createFooter()
+    window.a = this
 
   createHeader: ->
     # surface = new Famous.Surface()
@@ -20,5 +21,4 @@ class Slidey.Views.MainView
 
   createFooter: ->
     footer = new Slidey.Views.FooterGridView()
-    window.a = footer
     @layout.footer.add(footer.view)
