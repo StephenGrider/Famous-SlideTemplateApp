@@ -34,6 +34,7 @@ define(function(require, exports, module) {
       Modifiers: {}
     };
   }
+  window.Backbone = require('backbone');
   window.Famous.Views = {};
   window.Famous.Engine = require('famous/core/Engine');
   window.Famous.Surface = require('famous/core/Surface');
