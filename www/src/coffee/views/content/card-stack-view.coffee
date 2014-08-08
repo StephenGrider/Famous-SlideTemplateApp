@@ -9,4 +9,4 @@ class Slidey.Views.CardStackView
   showCards: ->
     for model in @collection.models
       card = new Slidey.Views.CardView(model: model)
-      @view.add(card.view)
+      @view.add(card)

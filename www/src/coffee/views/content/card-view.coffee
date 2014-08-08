@@ -1,11 +1,9 @@
 class Slidey.Views.CardView extends Famous.View
   constructor: (options) ->
+    super
     @model = options.model
-    @addView()
     @showSurface()
 
-  addView: ->
-    @view = new Famous.View()
 
   showSurface: ->
     surface = new Famous.Surface
@@ -30,8 +28,8 @@ class Slidey.Views.CardView extends Famous.View
       velocity: 0
     }
 
-    @view.add(mod).add(draggable).add(surface)
+    @add(mod).add(draggable).add(surface)
 
     surface.on('click', =>
-      @view.trigger('card:exit')
+      @trigger('card:exit')
     )

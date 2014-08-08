@@ -88,7 +88,7 @@ Slidey.Views.CardStackView = (function() {
       card = new Slidey.Views.CardView({
         model: model
       });
-      _results.push(this.view.add(card.view));
+      _results.push(this.view.add(card));
     }
     return _results;
   };
@@ -104,14 +104,10 @@ Slidey.Views.CardView = (function(_super) {
   __extends(CardView, _super);
 
   function CardView(options) {
+    CardView.__super__.constructor.apply(this, arguments);
     this.model = options.model;
-    this.addView();
     this.showSurface();
   }
-
-  CardView.prototype.addView = function() {
-    return this.view = new Famous.View();
-  };
 
   CardView.prototype.showSurface = function() {
     var draggable, mod, surface, trans;
@@ -134,10 +130,10 @@ Slidey.Views.CardView = (function(_super) {
       dampingRatio: 0.3,
       velocity: 0
     };
-    this.view.add(mod).add(draggable).add(surface);
+    this.add(mod).add(draggable).add(surface);
     return surface.on('click', (function(_this) {
       return function() {
-        return _this.view.trigger('card:exit');
+        return _this.trigger('card:exit');
       };
     })(this));
   };
