@@ -4,7 +4,6 @@ define((require, exports, module) ->
   }
 
   window.Backbone = require('backbone')
-
   window.Famous.Views = {}
   window.Famous.Engine = require('famous/core/Engine')
   window.Famous.Surface = require('famous/core/Surface')
@@ -21,5 +20,11 @@ define((require, exports, module) ->
   window.Famous.View = require('famous/core/View')
 
   context = Famous.Engine.createContext()
-  context.add(new Slidey.Views.MainView().layout)
+
+  #temp bootstrap data
+  card1 = new Backbone.Model(content: 'hi')
+  card2 = new Backbone.Model(content: 'yo')
+  
+  collection = new Backbone.Collection([card1, card2])
+  context.add(new Slidey.Views.MainView(collection: collection).layout)
 )

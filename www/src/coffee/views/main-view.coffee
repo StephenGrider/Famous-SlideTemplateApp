@@ -1,13 +1,14 @@
 class Slidey.Views.MainView
-  constructor: ->
+  constructor: (options) ->
+    @collection = options.collection
     @layout = new Famous.Views.HeaderFooterLayout
       headerSize: 100
       footerSize: 50
 
+
     # @createHeader()
     @createContent()
     @createFooter()
-    window.a = this
 
   createHeader: ->
     # surface = new Famous.Surface()
@@ -15,7 +16,7 @@ class Slidey.Views.MainView
     # @layout.add(new Famous.Surface())
 
   createContent: ->
-    content = new Slidey.Views.CardStackView
+    content = new Slidey.Views.CardStackView(collection: @collection)
 
     @layout.content.add(content.view)
 

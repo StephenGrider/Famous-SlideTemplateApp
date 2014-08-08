@@ -1,5 +1,6 @@
 class Slidey.Views.CardView
-  constructor: ->
+  constructor: (options) ->
+    @model = options.model
     @addView()
     @showSurface()
 
@@ -8,7 +9,7 @@ class Slidey.Views.CardView
 
   showSurface: ->
     surface = new Famous.Surface
-      content: 'im a card'
+      content: @model.get('content')
       origin: [.5, .5]
       size: [150,150]
       classes: ['card']

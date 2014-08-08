@@ -1,34 +1,5 @@
-Slidey.Views.MainView = (function() {
-  function MainView() {
-    this.layout = new Famous.Views.HeaderFooterLayout({
-      headerSize: 100,
-      footerSize: 50
-    });
-    this.createContent();
-    this.createFooter();
-    window.a = this;
-  }
-
-  MainView.prototype.createHeader = function() {};
-
-  MainView.prototype.createContent = function() {
-    var content;
-    content = new Slidey.Views.CardStackView;
-    return this.layout.content.add(content.view);
-  };
-
-  MainView.prototype.createFooter = function() {
-    var footer;
-    footer = new Slidey.Views.FooterGridView();
-    return this.layout.footer.add(footer.view);
-  };
-
-  return MainView;
-
-})();
-
 define(function(require, exports, module) {
-  var context;
+  var card1, card2, collection, context;
   if (window.Famous == null) {
     window.Famous = {
       Modifiers: {}
@@ -49,28 +20,70 @@ define(function(require, exports, module) {
   window.Famous.Views.GridLayout = require("famous/views/GridLayout");
   window.Famous.View = require('famous/core/View');
   context = Famous.Engine.createContext();
-  return context.add(new Slidey.Views.MainView().layout);
+  card1 = new Backbone.Model({
+    content: 'hi'
+  });
+  card2 = new Backbone.Model({
+    content: 'yo'
+  });
+  collection = new Backbone.Collection([card1, card2]);
+  return context.add(new Slidey.Views.MainView({
+    collection: collection
+  }).layout);
 });
 
+
+
+Slidey.Views.MainView = (function() {
+  function MainView(options) {
+    this.collection = options.collection;
+    this.layout = new Famous.Views.HeaderFooterLayout({
+      headerSize: 100,
+      footerSize: 50
+    });
+    this.createContent();
+    this.createFooter();
+  }
+
+  MainView.prototype.createHeader = function() {};
+
+  MainView.prototype.createContent = function() {
+    var content;
+    content = new Slidey.Views.CardStackView({
+      collection: this.collection
+    });
+    return this.layout.content.add(content.view);
+  };
+
+  MainView.prototype.createFooter = function() {
+    var footer;
+    footer = new Slidey.Views.FooterGridView();
+    return this.layout.footer.add(footer.view);
+  };
+
+  return MainView;
+
+})();
+
 Slidey.Views.CardStackView = (function() {
-  function CardStackView() {
+  function CardStackView(options) {
+    this.collection = options.collection;
     this.view = new Famous.View();
     this.showCards();
   }
 
   CardStackView.prototype.showCards = function() {
-    var card, i, _i, _results;
+    var card, model, _i, _len, _ref, _results;
+    _ref = this.collection.models;
     _results = [];
-    for (i = _i = 0; _i <= 3; i = ++_i) {
-      card = new Slidey.Views.CardView;
-      card.view.on('card:exit', this.onCardExit);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      model = _ref[_i];
+      card = new Slidey.Views.CardView({
+        model: model
+      });
       _results.push(this.view.add(card.view));
     }
     return _results;
-  };
-
-  CardStackView.prototype.onCardExit = function() {
-    return console.log('recorded exit!');
   };
 
   return CardStackView;
@@ -78,7 +91,8 @@ Slidey.Views.CardStackView = (function() {
 })();
 
 Slidey.Views.CardView = (function() {
-  function CardView() {
+  function CardView(options) {
+    this.model = options.model;
     this.addView();
     this.showSurface();
   }
@@ -90,7 +104,7 @@ Slidey.Views.CardView = (function() {
   CardView.prototype.showSurface = function() {
     var draggable, mod, surface, trans;
     surface = new Famous.Surface({
-      content: 'im a card',
+      content: this.model.get('content'),
       origin: [.5, .5],
       size: [150, 150],
       classes: ['card'],

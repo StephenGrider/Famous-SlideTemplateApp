@@ -3,3 +3,6 @@ body {
 
 .double-sided {
   backface-visibility: visible; }
+
+.card {
+  background-color: white; }
