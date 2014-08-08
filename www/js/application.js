@@ -1,38 +1,45 @@
-define(function(require, exports, module) {
-  var card1, card2, collection, context;
-  if (window.Famous == null) {
-    window.Famous = {
-      Modifiers: {}
-    };
-  }
-  window.Backbone = require('backbone');
-  window.Famous.Views = {};
-  window.Famous.Engine = require('famous/core/Engine');
-  window.Famous.Surface = require('famous/core/Surface');
-  window.Famous.Modifier = require('famous/core/Modifier');
-  window.Famous.Modifiers.Draggable = require("famous/modifiers/Draggable");
-  window.Famous.Modifiers.StateModifier = require("famous/modifiers/StateModifier");
-  window.Famous.Transform = require('famous/core/Transform');
-  window.Famous.ImageSurface = require('famous/surfaces/ImageSurface');
-  window.Famous.StateModifier = require('famous/modifiers/StateModifier');
-  window.Famous.Easing = require('famous/transitions/Easing');
-  window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout");
-  window.Famous.Views.GridLayout = require("famous/views/GridLayout");
-  window.Famous.View = require('famous/core/View');
+setTimeout(function() {
+  var card1, card2, collection, context, mainView;
   context = Famous.Engine.createContext();
-  card1 = new Backbone.Model({
-    content: 'hi'
-  });
-  card2 = new Backbone.Model({
-    content: 'yo'
-  });
+  card1 = new Slidey.Models.Card();
+  card2 = new Slidey.Models.Card();
   collection = new Backbone.Collection([card1, card2]);
-  return context.add(new Slidey.Views.MainView({
+  mainView = new Slidey.Views.MainView({
     collection: collection
-  }).layout);
-});
+  });
+  return context.add(mainView.layout);
+}, 100);
 
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+Slidey.Models.Card = (function(_super) {
+  __extends(Card, _super);
+
+  function Card() {
+    return Card.__super__.constructor.apply(this, arguments);
+  }
+
+  Card.prototype.initialize = function() {
+    return this.set('content', Math.random());
+  };
+
+  return Card;
+
+})(Backbone.Model);
+
+Slidey.Collections.Cards = (function(_super) {
+  __extends(Cards, _super);
+
+  function Cards() {
+    return Cards.__super__.constructor.apply(this, arguments);
+  }
+
+  Cards.prototype.model = Slidey.Models.Card;
+
+  return Cards;
+
+})(Backbone.Collection);
 
 Slidey.Views.MainView = (function() {
   function MainView(options) {
@@ -90,7 +97,12 @@ Slidey.Views.CardStackView = (function() {
 
 })();
 
-Slidey.Views.CardView = (function() {
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.CardView = (function(_super) {
+  __extends(CardView, _super);
+
   function CardView(options) {
     this.model = options.model;
     this.addView();
@@ -132,7 +144,7 @@ Slidey.Views.CardView = (function() {
 
   return CardView;
 
-})();
+})(Famous.View);
 
 Slidey.Views.FooterGridView = (function() {
   function FooterGridView() {

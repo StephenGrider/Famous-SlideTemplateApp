@@ -1,4 +1,4 @@
-class Slidey.Views.CardView
+class Slidey.Views.CardView extends Famous.View
   constructor: (options) ->
     @model = options.model
     @addView()

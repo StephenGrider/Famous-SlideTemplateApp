@@ -1,30 +1,11 @@
-define((require, exports, module) ->
-  window.Famous ?= {
-    Modifiers: {}
-  }
-
-  window.Backbone = require('backbone')
-  window.Famous.Views = {}
-  window.Famous.Engine = require('famous/core/Engine')
-  window.Famous.Surface = require('famous/core/Surface')
-  window.Famous.Modifier = require('famous/core/Modifier')
-  window.Famous.Modifiers.Draggable = require("famous/modifiers/Draggable")
-  window.Famous.Modifiers.StateModifier = require("famous/modifiers/StateModifier")
-
-  window.Famous.Transform = require('famous/core/Transform')
-  window.Famous.ImageSurface = require('famous/surfaces/ImageSurface')
-  window.Famous.StateModifier = require('famous/modifiers/StateModifier')
-  window.Famous.Easing = require('famous/transitions/Easing')
-  window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout")
-  window.Famous.Views.GridLayout = require("famous/views/GridLayout")
-  window.Famous.View = require('famous/core/View')
-
+setTimeout( ->
   context = Famous.Engine.createContext()
 
   #temp bootstrap data
-  card1 = new Backbone.Model(content: 'hi')
-  card2 = new Backbone.Model(content: 'yo')
-  
+  card1 = new Slidey.Models.Card()
+  card2 = new Slidey.Models.Card() 
+
   collection = new Backbone.Collection([card1, card2])
-  context.add(new Slidey.Views.MainView(collection: collection).layout)
-)
+  mainView = new Slidey.Views.MainView(collection: collection)
+  context.add(mainView.layout)
+, 100)
