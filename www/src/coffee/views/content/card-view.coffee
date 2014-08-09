@@ -1,35 +1,40 @@
 class Slidey.Views.CardView extends Famous.View
+
+  #
+  # Init
+
   constructor: (options) ->
     super
     @model = options.model
     @showSurface()
 
 
+  #
+  # Control
+
   showSurface: ->
     surface = new Famous.Surface
       content: @model.get('content')
       origin: [.5, .5]
-      size: [150,150]
+      size: [undefined,200]
       classes: ['card']
       textAlign: 'center'
 
     draggable = new Famous.Modifiers.Draggable
-      xRange: [-100, 200]
+      xRange: [-200, 200]
       yRange: [-100, 200]
 
     surface.pipe(draggable)
+    draggable.on('end', => @onDragEnd(draggable))
 
-    mod = new Famous.Modifiers.StateModifier
+    @add(draggable).add(surface)
 
-    trans = {
-      method: 'snap',
-      period: 300,
-      dampingRatio: 0.3,
-      velocity: 0
-    }
 
-    @add(mod).add(draggable).add(surface)
+  #
+  # Events
 
-    surface.on('click', =>
-      @trigger('card:exit')
-    )
+  onDragEnd: (draggable) ->
+    if Math.abs(draggable.getPosition()[0]) > 150
+      console.log('card exit')
+    else
+      draggable.setPosition([0,0,0],  {curve : 'easeOutBounce', duration : 200})

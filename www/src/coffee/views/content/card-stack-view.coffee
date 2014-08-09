@@ -1,7 +1,7 @@
-class Slidey.Views.CardStackView
+class Slidey.Views.CardStackView extends Famous.View
   constructor: (options) ->
+    super
     @collection = options.collection
-    @view = new Famous.View()
 
     @showCards()
 
@@ -9,4 +9,4 @@ class Slidey.Views.CardStackView
   showCards: ->
     for model in @collection.models
       card = new Slidey.Views.CardView(model: model)
-      @view.add(card)
+      @add(card)

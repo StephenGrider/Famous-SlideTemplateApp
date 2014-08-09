@@ -18,7 +18,7 @@ class Slidey.Views.MainView
   createContent: ->
     content = new Slidey.Views.CardStackView(collection: @collection)
 
-    @layout.content.add(content.view)
+    @layout.content.add(content)
 
   createFooter: ->
     footer = new Slidey.Views.FooterGridView()

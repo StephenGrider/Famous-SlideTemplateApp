@@ -3,7 +3,7 @@ setTimeout(function() {
   context = Famous.Engine.createContext();
   card1 = new Slidey.Models.Card();
   card2 = new Slidey.Models.Card();
-  collection = new Backbone.Collection([card1, card2]);
+  collection = new Backbone.Collection([card1]);
   mainView = new Slidey.Views.MainView({
     collection: collection
   });
@@ -59,7 +59,7 @@ Slidey.Views.MainView = (function() {
     content = new Slidey.Views.CardStackView({
       collection: this.collection
     });
-    return this.layout.content.add(content.view);
+    return this.layout.content.add(content);
   };
 
   MainView.prototype.createFooter = function() {
@@ -72,10 +72,15 @@ Slidey.Views.MainView = (function() {
 
 })();
 
-Slidey.Views.CardStackView = (function() {
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.CardStackView = (function(_super) {
+  __extends(CardStackView, _super);
+
   function CardStackView(options) {
+    CardStackView.__super__.constructor.apply(this, arguments);
     this.collection = options.collection;
-    this.view = new Famous.View();
     this.showCards();
   }
 
@@ -88,14 +93,14 @@ Slidey.Views.CardStackView = (function() {
       card = new Slidey.Views.CardView({
         model: model
       });
-      _results.push(this.view.add(card));
+      _results.push(this.add(card));
     }
     return _results;
   };
 
   return CardStackView;
 
-})();
+})(Famous.View);
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -110,32 +115,36 @@ Slidey.Views.CardView = (function(_super) {
   }
 
   CardView.prototype.showSurface = function() {
-    var draggable, mod, surface, trans;
+    var draggable, surface;
     surface = new Famous.Surface({
       content: this.model.get('content'),
       origin: [.5, .5],
-      size: [150, 150],
+      size: [void 0, 200],
       classes: ['card'],
       textAlign: 'center'
     });
     draggable = new Famous.Modifiers.Draggable({
-      xRange: [-100, 200],
+      xRange: [-200, 200],
       yRange: [-100, 200]
     });
     surface.pipe(draggable);
-    mod = new Famous.Modifiers.StateModifier;
-    trans = {
-      method: 'snap',
-      period: 300,
-      dampingRatio: 0.3,
-      velocity: 0
-    };
-    this.add(mod).add(draggable).add(surface);
-    return surface.on('click', (function(_this) {
+    draggable.on('end', (function(_this) {
       return function() {
-        return _this.trigger('card:exit');
+        return _this.onDragEnd(draggable);
       };
     })(this));
+    return this.add(draggable).add(surface);
+  };
+
+  CardView.prototype.onDragEnd = function(draggable) {
+    if (Math.abs(draggable.getPosition()[0]) > 150) {
+      return console.log('card exit');
+    } else {
+      return draggable.setPosition([0, 0, 0], {
+        curve: 'easeOutBounce',
+        duration: 200
+      });
+    }
   };
 
   return CardView;
