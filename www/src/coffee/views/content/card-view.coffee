@@ -37,4 +37,4 @@ class Slidey.Views.CardView extends Famous.View
     if Math.abs(draggable.getPosition()[0]) > 150
       console.log('card exit')
     else
-      draggable.setPosition([0,0,0],  {curve : 'easeOutBounce', duration : 200})
+      draggable.setPosition([0,0,0],  {curve : 'easeOutBounce', duration : 300})

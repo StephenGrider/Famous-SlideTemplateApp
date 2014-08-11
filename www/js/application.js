@@ -142,7 +142,7 @@ Slidey.Views.CardView = (function(_super) {
     } else {
       return draggable.setPosition([0, 0, 0], {
         curve: 'easeOutBounce',
-        duration: 200
+        duration: 300
       });
     }
   };
