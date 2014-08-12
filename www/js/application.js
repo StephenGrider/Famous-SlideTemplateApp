@@ -142,41 +142,60 @@ Slidey.Views.CardView = (function(_super) {
   }
 
   CardView.prototype.showSurface = function() {
-    var draggable;
-    this.surface = new Famous.Surface({
+    var surface;
+    surface = new Famous.Surface({
       content: this.model.get('content'),
       origin: [.5, .5],
       size: [void 0, 200],
       classes: ['card'],
       textAlign: 'center'
     });
-    draggable = new Famous.Modifiers.Draggable({
+    this.draggable = new Famous.Modifiers.Draggable({
       xRange: [-200, 200],
       yRange: [-100, 200]
     });
-    this.surface.pipe(draggable);
-    draggable.on('end', (function(_this) {
+    this.stateMod = new Famous.StateModifier({
+      transform: Famous.Transform.rotateZ(0)
+    });
+    surface.pipe(this.draggable);
+    this.draggable.on('end', (function(_this) {
       return function() {
-        return _this.onDragEnd(draggable);
+        return _this.onDragEnd(_this.draggable);
       };
     })(this));
-    return this.add(draggable).add(this.surface);
+    this.draggable.on('update', (function(_this) {
+      return function() {
+        return _this.stateMod.setTransform(Famous.Transform.rotateZ(_this.draggable._positionState.state[0] / 500));
+      };
+    })(this));
+    return this.add(this.stateMod).add(this.draggable).add(surface);
+  };
+
+  CardView.prototype.resetPosition = function() {
+    var trans;
+    trans = {
+      curve: 'easeOutBounce',
+      duration: 1500
+    };
+    this.draggable.setPosition([0, 0, 0], trans);
+    return this.stateMod.setTransform(Famous.Transform.identity, trans);
   };
 
   CardView.prototype.onDragEnd = function(draggable) {
     var trans;
+    this.draggable = draggable;
     trans = {
       curve: 'easeOutBounce',
       duration: 3000
     };
-    if (draggable.getPosition()[0] > 150) {
+    if (this.draggable.getPosition()[0] > 150) {
       this._eventOutput.emit('card:exit', this.model);
-      return draggable.setPosition([600, 0, 0], trans);
-    } else if (draggable.getPosition()[0] < -150) {
+      return this.draggable.setPosition([600, 0, 0], trans);
+    } else if (this.draggable.getPosition()[0] < -150) {
       this._eventOutput.emit('card:exit', this.model);
-      return draggable.setPosition([-600, 0, 0], trans);
+      return this.draggable.setPosition([-600, 0, 0], trans);
     } else {
-      return draggable.setPosition([0, 0, 0], trans);
+      return this.resetPosition();
     }
   };
 
