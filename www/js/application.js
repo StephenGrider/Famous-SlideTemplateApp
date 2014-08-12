@@ -158,6 +158,7 @@ Slidey.Views.CardView = (function(_super) {
       transform: Famous.Transform.rotateZ(0)
     });
     surface.pipe(this.draggable);
+    window.a = surface;
     this.draggable.on('end', (function(_this) {
       return function() {
         return _this.onDragEnd(_this.draggable);
@@ -175,7 +176,7 @@ Slidey.Views.CardView = (function(_super) {
     var trans;
     trans = {
       curve: 'easeOutBounce',
-      duration: 1500
+      duration: 500
     };
     this.draggable.setPosition([0, 0, 0], trans);
     return this.stateMod.setTransform(Famous.Transform.identity, trans);

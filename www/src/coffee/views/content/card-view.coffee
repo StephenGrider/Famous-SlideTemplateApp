@@ -28,6 +28,7 @@ class Slidey.Views.CardView extends Famous.View
       transform: Famous.Transform.rotateZ(0)
 
     surface.pipe(@draggable)
+    window.a = surface
     @draggable.on('end', => @onDragEnd(@draggable))
     @draggable.on('update', =>
       @stateMod.setTransform(Famous.Transform.rotateZ(@draggable._positionState.state[0]/500))
@@ -36,7 +37,7 @@ class Slidey.Views.CardView extends Famous.View
     @.add(@stateMod).add(@draggable).add(surface)
 
   resetPosition: ->
-    trans = {curve : 'easeOutBounce', duration : 1500}
+    trans = {curve : 'easeOutBounce', duration : 500}
     @draggable.setPosition([0,0,0], trans)
     @stateMod.setTransform(Famous.Transform.identity, trans)
 
