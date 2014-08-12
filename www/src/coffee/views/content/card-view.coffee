@@ -13,7 +13,7 @@ class Slidey.Views.CardView extends Famous.View
   # Control
 
   showSurface: ->
-    surface = new Famous.Surface
+    @surface = new Famous.Surface
       content: @model.get('content')
       origin: [.5, .5]
       size: [undefined,200]
@@ -24,17 +24,24 @@ class Slidey.Views.CardView extends Famous.View
       xRange: [-200, 200]
       yRange: [-100, 200]
 
-    surface.pipe(draggable)
+    @surface.pipe(draggable)
     draggable.on('end', => @onDragEnd(draggable))
 
-    @add(draggable).add(surface)
+
+    @add(draggable).add(@surface)
 
 
   #
   # Events
 
   onDragEnd: (draggable) ->
-    if Math.abs(draggable.getPosition()[0]) > 150
-      console.log('card exit')
+    trans = {curve : 'easeOutBounce', duration : 3000}
+
+    if draggable.getPosition()[0] > 150
+      @_eventOutput.emit('card:exit', this.model)
+      draggable.setPosition([600,0,0], trans)
+    else if draggable.getPosition()[0] < -150
+      @_eventOutput.emit('card:exit', this.model)
+      draggable.setPosition([-600,0,0], trans)
     else
-      draggable.setPosition([0,0,0],  {curve : 'easeOutBounce', duration : 300})
+      draggable.setPosition([0,0,0], trans)
