@@ -7,3 +7,7 @@ class Slidey.Models.Card extends Backbone.Model
 
 class Slidey.Collections.Cards extends Backbone.Collection
   model: Slidey.Models.Card
+
+  addOne: ->
+    @.add(new Slidey.Models.Card)
+    @.trigger('card:added')

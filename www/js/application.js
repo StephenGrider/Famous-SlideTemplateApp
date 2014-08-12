@@ -39,6 +39,11 @@ Slidey.Collections.Cards = (function(_super) {
 
   Cards.prototype.model = Slidey.Models.Card;
 
+  Cards.prototype.addOne = function() {
+    this.add(new Slidey.Models.Card);
+    return this.trigger('card:added');
+  };
+
   return Cards;
 
 })(Backbone.Collection);
@@ -74,49 +79,6 @@ Slidey.Views.MainView = (function() {
 
 })();
 
-Slidey.Views.FooterGridView = (function() {
-  function FooterGridView() {
-    this.view = new Famous.View();
-    this.surfaces = [];
-    this.gridLayout = new Famous.Views.GridLayout({
-      dimensions: [3, 1]
-    });
-    this.gridLayout.sequenceFrom(this.surfaces);
-    this.view.add(this.gridLayout);
-    this.buildSequence();
-  }
-
-  FooterGridView.prototype.buildSequence = function() {
-    var surface1, surface2, surface3;
-    surface1 = new Famous.Surface({
-      content: 'sup',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    surface2 = new Famous.Surface({
-      content: 'yo',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    surface3 = new Famous.Surface({
-      content: 'blah',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    this.surfaces.push(surface1);
-    this.surfaces.push(surface2);
-    return this.surfaces.push(surface3);
-  };
-
-  return FooterGridView;
-
-})();
-
-
-
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -126,28 +88,41 @@ Slidey.Views.CardStackView = (function(_super) {
 
   function CardStackView(options) {
     this.onCardExit = __bind(this.onCardExit, this);
+    this.onCardAdd = __bind(this.onCardAdd, this);
     CardStackView.__super__.constructor.apply(this, arguments);
     this.collection = options.collection;
+    this.collection.on('card:added', this.onCardAdd);
+    window.b = this.collection;
     this.showCards();
   }
 
   CardStackView.prototype.showCards = function() {
-    var card, model, _i, _len, _ref, _results;
+    var cardView, model, _i, _len, _ref, _results;
     _ref = this.collection.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       model = _ref[_i];
-      card = new Slidey.Views.CardView({
+      cardView = new Slidey.Views.CardView({
         model: model
       });
-      card.on('card:exit', this.onCardExit);
-      _results.push(this.add(card));
+      cardView.on('card:exit', this.onCardExit);
+      _results.push(this.add(cardView));
     }
     return _results;
   };
 
+  CardStackView.prototype.onCardAdd = function() {
+    var cardView;
+    cardView = new Slidey.Views.CardView({
+      model: this.collection.last()
+    });
+    cardView.on('card:exit', this.onCardExit);
+    return this.add(cardView);
+  };
+
   CardStackView.prototype.onCardExit = function(cardModel) {
-    return console.log('cya', cardModel);
+    cardModel.destroy();
+    return this.collection.addOne();
   };
 
   return CardStackView;
@@ -208,3 +183,46 @@ Slidey.Views.CardView = (function(_super) {
   return CardView;
 
 })(Famous.View);
+
+Slidey.Views.FooterGridView = (function() {
+  function FooterGridView() {
+    this.view = new Famous.View();
+    this.surfaces = [];
+    this.gridLayout = new Famous.Views.GridLayout({
+      dimensions: [3, 1]
+    });
+    this.gridLayout.sequenceFrom(this.surfaces);
+    this.view.add(this.gridLayout);
+    this.buildSequence();
+  }
+
+  FooterGridView.prototype.buildSequence = function() {
+    var surface1, surface2, surface3;
+    surface1 = new Famous.Surface({
+      content: 'sup',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    surface2 = new Famous.Surface({
+      content: 'yo',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    surface3 = new Famous.Surface({
+      content: 'blah',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    this.surfaces.push(surface1);
+    this.surfaces.push(surface2);
+    return this.surfaces.push(surface3);
+  };
+
+  return FooterGridView;
+
+})();
+
+
