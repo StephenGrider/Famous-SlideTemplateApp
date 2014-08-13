@@ -2,7 +2,7 @@ class Slidey.Views.MainView
   constructor: (options) ->
     @collection = options.collection
     @layout = new Famous.Views.HeaderFooterLayout
-      headerSize: 100
+      headerSize: 50
       footerSize: 50
 
 

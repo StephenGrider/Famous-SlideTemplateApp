@@ -14,7 +14,7 @@ Slidey.Views.MainView = (function() {
   function MainView(options) {
     this.collection = options.collection;
     this.layout = new Famous.Views.HeaderFooterLayout({
-      headerSize: 100,
+      headerSize: 50,
       footerSize: 50
     });
     this.createContent();
@@ -42,7 +42,8 @@ Slidey.Views.MainView = (function() {
 })();
 
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Slidey.Models.Card = (function(_super) {
   __extends(Card, _super);
@@ -51,11 +52,9 @@ Slidey.Models.Card = (function(_super) {
     return Card.__super__.constructor.apply(this, arguments);
   }
 
-  Card.prototype.initialize = function() {
-    return this.set('content', Math.random());
+  Card.prototype.getImageSrc = function() {
+    return this.get('link').replace('.jpg', 'm.jpg');
   };
-
-  Card.prototype.urlRoot = '/api/cards';
 
   return Card;
 
@@ -65,62 +64,50 @@ Slidey.Collections.Cards = (function(_super) {
   __extends(Cards, _super);
 
   function Cards() {
+    this.prefetchImages = __bind(this.prefetchImages, this);
+    this.updatePage = __bind(this.updatePage, this);
     return Cards.__super__.constructor.apply(this, arguments);
   }
 
   Cards.prototype.model = Slidey.Models.Card;
 
-  Cards.prototype.addOne = function() {
-    this.add(new Slidey.Models.Card);
-    return this.trigger('card:added');
+  Cards.prototype.url = "https://api.imgur.com/3/gallery/random/random/" + Cards.page;
+
+  Cards.prototype.page = 0;
+
+  Cards.prototype.initialize = function() {
+    this.on('sync', (function(_this) {
+      return function() {
+        return _this.prefetchImages(0);
+      };
+    })(this));
+    return this.on('sync', this.updatePage);
+  };
+
+  Cards.prototype.parse = function(response) {
+    return response.data;
+  };
+
+  Cards.prototype.updatePage = function() {
+    return this.page++;
+  };
+
+  Cards.prototype.prefetchImages = function(index) {
+    var image, _i, _len, _ref, _results;
+    _ref = this.models;
+    _results = [];
+    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+      image = _ref[index];
+      _results.push(setTimeout((function() {
+        return (new Image).src = image.getImageSrc();
+      }), index * 300));
+    }
+    return _results;
   };
 
   return Cards;
 
 })(Backbone.Collection);
-
-Slidey.Views.FooterGridView = (function() {
-  function FooterGridView() {
-    this.view = new Famous.View();
-    this.surfaces = [];
-    this.gridLayout = new Famous.Views.GridLayout({
-      dimensions: [3, 1]
-    });
-    this.gridLayout.sequenceFrom(this.surfaces);
-    this.view.add(this.gridLayout);
-    this.buildSequence();
-  }
-
-  FooterGridView.prototype.buildSequence = function() {
-    var surface1, surface2, surface3;
-    surface1 = new Famous.Surface({
-      content: 'sup',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    surface2 = new Famous.Surface({
-      content: 'yo',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    surface3 = new Famous.Surface({
-      content: 'blah',
-      origin: [.5, .5],
-      size: [void 0, void 0],
-      textAlign: 'center'
-    });
-    this.surfaces.push(surface1);
-    this.surfaces.push(surface2);
-    return this.surfaces.push(surface3);
-  };
-
-  return FooterGridView;
-
-})();
-
-
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
@@ -131,29 +118,18 @@ Slidey.Views.CardStackView = (function(_super) {
 
   function CardStackView(options) {
     this.onCardExit = __bind(this.onCardExit, this);
-    this.onCardAdd = __bind(this.onCardAdd, this);
+    this.addCard = __bind(this.addCard, this);
     CardStackView.__super__.constructor.apply(this, arguments);
     this.collection = options.collection;
-    this.collection.on('add', this.onCardAdd);
-    this.collection.addOne();
+    this.collection.on('add', this.addCard);
+    this.collection.fetch({
+      headers: {
+        'Authorization': 'Client-ID 890346a61c2ad1d'
+      }
+    });
   }
 
-  CardStackView.prototype.showCards = function() {
-    var cardView, model, _i, _len, _ref, _results;
-    _ref = this.collection.models;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      model = _ref[_i];
-      cardView = new Slidey.Views.CardView({
-        model: model
-      });
-      cardView.on('card:exit', this.onCardExit);
-      _results.push(this.add(cardView));
-    }
-    return _results;
-  };
-
-  CardStackView.prototype.onCardAdd = function() {
+  CardStackView.prototype.addCard = function() {
     var cardView;
     cardView = new Slidey.Views.CardView({
       model: this.collection.last()
@@ -163,8 +139,8 @@ Slidey.Views.CardStackView = (function(_super) {
   };
 
   CardStackView.prototype.onCardExit = function(cardModel) {
-    this.hide();
-    return this.collection.addOne();
+    cardModel.destroy();
+    return this.addCard();
   };
 
   return CardStackView;
@@ -187,10 +163,10 @@ Slidey.Views.CardView = (function(_super) {
 
   CardView.prototype.showSurface = function() {
     var surface;
-    surface = new Famous.Surface({
-      content: this.model.get('content'),
+    surface = new Famous.ImageSurface({
+      content: this.model.getImageSrc(),
       origin: [.5, .5],
-      size: [void 0, 200],
+      size: [void 0, 350],
       classes: ['card'],
       textAlign: 'center'
     });
@@ -257,3 +233,46 @@ Slidey.Views.CardView = (function(_super) {
   return CardView;
 
 })(Famous.View);
+
+Slidey.Views.FooterGridView = (function() {
+  function FooterGridView() {
+    this.view = new Famous.View();
+    this.surfaces = [];
+    this.gridLayout = new Famous.Views.GridLayout({
+      dimensions: [3, 1]
+    });
+    this.gridLayout.sequenceFrom(this.surfaces);
+    this.view.add(this.gridLayout);
+    this.buildSequence();
+  }
+
+  FooterGridView.prototype.buildSequence = function() {
+    var surface1, surface2, surface3;
+    surface1 = new Famous.Surface({
+      content: 'sup',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    surface2 = new Famous.Surface({
+      content: 'yo',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    surface3 = new Famous.Surface({
+      content: 'blah',
+      origin: [.5, .5],
+      size: [void 0, void 0],
+      textAlign: 'center'
+    });
+    this.surfaces.push(surface1);
+    this.surfaces.push(surface2);
+    return this.surfaces.push(surface3);
+  };
+
+  return FooterGridView;
+
+})();
+
+

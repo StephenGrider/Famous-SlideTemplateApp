@@ -6,29 +6,22 @@ class Slidey.Views.CardStackView extends Famous.Views.RenderController
   constructor: (options) ->
     super
     @collection = options.collection
-    @collection.on('add', @onCardAdd)
+    @collection.on('add', @addCard)
 
-    @collection.addOne()
-    # @showCards()
+    @collection.fetch({ headers: {'Authorization' :'Client-ID 890346a61c2ad1d'} })
 
   #
   # Control
 
-  showCards: ->
-    for model in @collection.models
-      cardView = new Slidey.Views.CardView(model: model)
-      cardView.on('card:exit', @onCardExit)
-      @add(cardView)
+  addCard: =>
+    cardView = new Slidey.Views.CardView(model: @collection.last())
+    cardView.on('card:exit', @onCardExit)
+    @show(cardView)
 
 
   #
   # Events
 
-  onCardAdd: =>
-    cardView = new Slidey.Views.CardView(model: @collection.last())
-    cardView.on('card:exit', @onCardExit)
-    @show(cardView)
-
   onCardExit: (cardModel) =>
-    @hide()
-    @collection.addOne()
+    cardModel.destroy()
+    @addCard()

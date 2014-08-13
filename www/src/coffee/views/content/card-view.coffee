@@ -13,10 +13,10 @@ class Slidey.Views.CardView extends Famous.View
   # Control
 
   showSurface: ->
-    surface = new Famous.Surface
-      content: @model.get('content')
+    surface = new Famous.ImageSurface
+      content: @model.getImageSrc()
       origin: [.5, .5]
-      size: [undefined,200]
+      size: [undefined, 350]
       classes: ['card']
       textAlign: 'center'
 
