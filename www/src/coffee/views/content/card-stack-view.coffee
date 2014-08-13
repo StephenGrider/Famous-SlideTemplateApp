@@ -1,4 +1,4 @@
-class Slidey.Views.CardStackView extends Famous.View
+class Slidey.Views.CardStackView extends Famous.Views.RenderController
 
   #
   # Init
@@ -6,10 +6,10 @@ class Slidey.Views.CardStackView extends Famous.View
   constructor: (options) ->
     super
     @collection = options.collection
-    @collection.on('card:added', @onCardAdd)
-    window.b = @collection
+    @collection.on('add', @onCardAdd)
 
-    @showCards()
+    @collection.addOne()
+    # @showCards()
 
   #
   # Control
@@ -27,8 +27,8 @@ class Slidey.Views.CardStackView extends Famous.View
   onCardAdd: =>
     cardView = new Slidey.Views.CardView(model: @collection.last())
     cardView.on('card:exit', @onCardExit)
-    @add(cardView)
+    @show(cardView)
 
   onCardExit: (cardModel) =>
-    cardModel.destroy()
+    @hide()
     @collection.addOne()

@@ -5,7 +5,10 @@ setTimeout( ->
   card1 = new Slidey.Models.Card()
   card2 = new Slidey.Models.Card()
 
-  collection = new Slidey.Collections.Cards([card1])
+  collection = new Slidey.Collections.Cards()
   mainView = new Slidey.Views.MainView(collection: collection)
   context.add(mainView.layout)
+
+
+
 , 100)

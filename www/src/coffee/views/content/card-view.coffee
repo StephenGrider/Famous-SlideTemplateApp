@@ -26,13 +26,12 @@ class Slidey.Views.CardView extends Famous.View
 
     @stateMod = new Famous.StateModifier
       transform: Famous.Transform.rotateZ(0)
+      origin: [.5, 0]
 
     surface.pipe(@draggable)
-    window.a = surface
+
     @draggable.on('end', => @onDragEnd(@draggable))
-    @draggable.on('update', =>
-      @stateMod.setTransform(Famous.Transform.rotateZ(@draggable._positionState.state[0]/500))
-    )
+    @draggable.on('update', @onDragUpdate)
 
     @.add(@stateMod).add(@draggable).add(surface)
 
@@ -41,17 +40,26 @@ class Slidey.Views.CardView extends Famous.View
     @draggable.setPosition([0,0,0], trans)
     @stateMod.setTransform(Famous.Transform.identity, trans)
 
+  cardExit: (direction) ->
+    trans = {curve : 'easeOutBounce', duration : 3000}
+
+    @_eventOutput.emit('card:exit', this.model)
+    @draggable.setPosition([-600,0,0], trans) if direction == 'left'
+    @draggable.setPosition([600,0,0], trans) if direction == 'right'
+
+
   #
   # Events
 
-  onDragEnd: (@draggable) ->
-    trans = {curve : 'easeOutBounce', duration : 3000}
+  onDragUpdate: =>
+    @stateMod.setTransform(Famous.Transform.rotateZ(@draggable.getPosition()[0]/800))
 
-    if @draggable.getPosition()[0] > 150
-      @_eventOutput.emit('card:exit', this.model)
-      @draggable.setPosition([600,0,0], trans)
-    else if @draggable.getPosition()[0] < -150
-      @_eventOutput.emit('card:exit', this.model)
-      @draggable.setPosition([-600,0,0], trans)
+  onDragEnd: (@draggable) ->
+    distance = @draggable.getPosition()[0]
+
+    if distance > 150
+      @cardExit('right')
+    else if distance < -150
+      @cardExit('left')
     else
       @resetPosition()

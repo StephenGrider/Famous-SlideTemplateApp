@@ -25,6 +25,7 @@ define(function(require, exports, module){
   window.Famous.Easing = require('famous/transitions/Easing')
   window.Famous.Views.HeaderFooterLayout = require("famous/views/HeaderFooterLayout")
   window.Famous.Views.GridLayout = require("famous/views/GridLayout")
+  window.Famous.Views.RenderController = require("famous/views/RenderController")
   window.Famous.View = require('famous/core/View')
 
   $.getScript('/js/application.js')
