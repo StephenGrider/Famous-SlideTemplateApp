@@ -42,6 +42,22 @@ Slidey.Views.MainView = (function() {
 })();
 
 var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.Spinner = (function(_super) {
+  __extends(Spinner, _super);
+
+  function Spinner() {
+    Spinner.__super__.constructor.call(this, {
+      content: 'asdf'
+    });
+  }
+
+  return Spinner;
+
+})(Famous.Surface);
+
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -53,7 +69,7 @@ Slidey.Models.Card = (function(_super) {
   }
 
   Card.prototype.getImageSrc = function() {
-    return this.get('link').replace('.jpg', 'm.jpg');
+    return this.get('link').replace('.jpg', 'm.jpg').replace('.png', 'm.png');
   };
 
   return Card;
@@ -71,14 +87,14 @@ Slidey.Collections.Cards = (function(_super) {
 
   Cards.prototype.model = Slidey.Models.Card;
 
-  Cards.prototype.url = "https://api.imgur.com/3/gallery/random/random/" + Cards.page;
-
   Cards.prototype.page = 0;
+
+  Cards.prototype.url = "https://api.imgur.com/3/gallery/random/random/" + Cards.page;
 
   Cards.prototype.initialize = function() {
     this.on('sync', (function(_this) {
       return function() {
-        return _this.prefetchImages(0);
+        return _this.prefetchImages();
       };
     })(this));
     return this.on('sync', this.updatePage);
@@ -92,15 +108,20 @@ Slidey.Collections.Cards = (function(_super) {
     return this.page++;
   };
 
-  Cards.prototype.prefetchImages = function(index) {
-    var image, _i, _len, _ref, _results;
+  Cards.prototype.prefetchImages = function() {
+    var image, index, _i, _len, _ref, _results;
     _ref = this.models;
     _results = [];
     for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
       image = _ref[index];
-      _results.push(setTimeout((function() {
-        return (new Image).src = image.getImageSrc();
-      }), index * 300));
+      if (!image) {
+        break;
+      }
+      if (image.get('is_album')) {
+        _results.push(image.destroy());
+      } else {
+        _results.push((new Image).src = image.getImageSrc());
+      }
     }
     return _results;
   };

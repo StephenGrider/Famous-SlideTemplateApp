@@ -1,14 +1,14 @@
 class Slidey.Models.Card extends Backbone.Model
   getImageSrc: ->
-    @get('link').replace('.jpg', 'm.jpg')
+    @get('link').replace('.jpg', 'm.jpg').replace('.png', 'm.png')
 
 class Slidey.Collections.Cards extends Backbone.Collection
   model: Slidey.Models.Card
+  page: 0 
   url: "https://api.imgur.com/3/gallery/random/random/#{@page}"
-  page: 0
 
   initialize: ->
-    @on('sync', => @prefetchImages(0))
+    @on('sync', => @prefetchImages())
     @on('sync', @updatePage)
 
   parse: (response) ->
@@ -17,6 +17,11 @@ class Slidey.Collections.Cards extends Backbone.Collection
   updatePage: =>
     @page++
 
-  prefetchImages: (index) =>
+  prefetchImages: =>
     for image,index in @models
-      setTimeout((-> (new Image).src = image.getImageSrc()), index * 300)
+      break unless image
+
+      if image.get('is_album')
+        image.destroy()
+      else
+        (new Image).src = image.getImageSrc()
