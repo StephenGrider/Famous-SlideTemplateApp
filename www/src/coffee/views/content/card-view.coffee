@@ -13,12 +13,7 @@ class Slidey.Views.CardView extends Famous.View
   # Control
 
   showSurface: ->
-    surface = new Famous.ImageSurface
-      content: @model.getImageSrc()
-      origin: [.5, .5]
-      size: [undefined, 350]
-      classes: ['card']
-      textAlign: 'center'
+    cardInterior = new Slidey.Views.CardInteriorView model: @model
 
     @draggable = new Famous.Modifiers.Draggable
       xRange: [-200, 200]
@@ -28,12 +23,12 @@ class Slidey.Views.CardView extends Famous.View
       transform: Famous.Transform.rotateZ(0)
       origin: [.5, 0]
 
-    surface.pipe(@draggable)
+    cardInterior.pipe(@draggable)
 
     @draggable.on('end', => @onDragEnd(@draggable))
     @draggable.on('update', @onDragUpdate)
 
-    @.add(@stateMod).add(@draggable).add(surface)
+    @.add(@stateMod).add(@draggable).add(cardInterior)
 
   resetPosition: ->
     trans = {curve : 'easeOutBounce', duration : 500}

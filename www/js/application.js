@@ -10,53 +10,6 @@ setTimeout(function() {
   return context.add(mainView.layout);
 }, 100);
 
-Slidey.Views.MainView = (function() {
-  function MainView(options) {
-    this.collection = options.collection;
-    this.layout = new Famous.Views.HeaderFooterLayout({
-      headerSize: 50,
-      footerSize: 50
-    });
-    this.createContent();
-    this.createFooter();
-  }
-
-  MainView.prototype.createHeader = function() {};
-
-  MainView.prototype.createContent = function() {
-    var content;
-    content = new Slidey.Views.CardStackView({
-      collection: this.collection
-    });
-    return this.layout.content.add(content);
-  };
-
-  MainView.prototype.createFooter = function() {
-    var footer;
-    footer = new Slidey.Views.FooterGridView();
-    return this.layout.footer.add(footer.view);
-  };
-
-  return MainView;
-
-})();
-
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Slidey.Views.Spinner = (function(_super) {
-  __extends(Spinner, _super);
-
-  function Spinner() {
-    Spinner.__super__.constructor.call(this, {
-      content: 'asdf'
-    });
-  }
-
-  return Spinner;
-
-})(Famous.Surface);
-
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -130,6 +83,82 @@ Slidey.Collections.Cards = (function(_super) {
 
 })(Backbone.Collection);
 
+Slidey.Views.MainView = (function() {
+  function MainView(options) {
+    this.collection = options.collection;
+    this.layout = new Famous.Views.HeaderFooterLayout({
+      headerSize: 50,
+      footerSize: 50
+    });
+    this.createContent();
+    this.createFooter();
+  }
+
+  MainView.prototype.createHeader = function() {};
+
+  MainView.prototype.createContent = function() {
+    var content;
+    content = new Slidey.Views.CardStackView({
+      collection: this.collection
+    });
+    return this.layout.content.add(content);
+  };
+
+  MainView.prototype.createFooter = function() {
+    var footer;
+    footer = new Slidey.Views.FooterGridView();
+    return this.layout.footer.add(footer.view);
+  };
+
+  return MainView;
+
+})();
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.Spinner = (function(_super) {
+  __extends(Spinner, _super);
+
+  function Spinner() {
+    Spinner.__super__.constructor.call(this, {
+      content: 'asdf'
+    });
+  }
+
+  return Spinner;
+
+})(Famous.Surface);
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.CardInteriorView = (function(_super) {
+  __extends(CardInteriorView, _super);
+
+  function CardInteriorView(options) {
+    CardInteriorView.__super__.constructor.apply(this, arguments);
+    this.model = options.model;
+    this.showCardInterior();
+  }
+
+  CardInteriorView.prototype.showCardInterior = function() {
+    var surface;
+    surface = new Famous.ImageSurface({
+      content: this.model.getImageSrc(),
+      origin: [.5, .5],
+      size: [void 0, 350],
+      classes: ['card'],
+      textAlign: 'center'
+    });
+    surface.pipe(this._eventOutput);
+    return this.add(surface);
+  };
+
+  return CardInteriorView;
+
+})(Famous.View);
+
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -183,13 +212,9 @@ Slidey.Views.CardView = (function(_super) {
   }
 
   CardView.prototype.showSurface = function() {
-    var surface;
-    surface = new Famous.ImageSurface({
-      content: this.model.getImageSrc(),
-      origin: [.5, .5],
-      size: [void 0, 350],
-      classes: ['card'],
-      textAlign: 'center'
+    var cardInterior;
+    cardInterior = new Slidey.Views.CardInteriorView({
+      model: this.model
     });
     this.draggable = new Famous.Modifiers.Draggable({
       xRange: [-200, 200],
@@ -199,14 +224,14 @@ Slidey.Views.CardView = (function(_super) {
       transform: Famous.Transform.rotateZ(0),
       origin: [.5, 0]
     });
-    surface.pipe(this.draggable);
+    cardInterior.pipe(this.draggable);
     this.draggable.on('end', (function(_this) {
       return function() {
         return _this.onDragEnd(_this.draggable);
       };
     })(this));
     this.draggable.on('update', this.onDragUpdate);
-    return this.add(this.stateMod).add(this.draggable).add(surface);
+    return this.add(this.stateMod).add(this.draggable).add(cardInterior);
   };
 
   CardView.prototype.resetPosition = function() {
