@@ -6,3 +6,10 @@ body {
 
 .card {
   background-color: white; }
+
+.card-description {
+  text-align: center;
+  font: 16px; }
+
+* {
+  border: 1px solid black; }

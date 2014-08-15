@@ -13,7 +13,9 @@ class Slidey.Views.CardView extends Famous.View
   # Control
 
   showSurface: ->
-    cardInterior = new Slidey.Views.CardInteriorView model: @model
+    cardInterior = new Slidey.Views.CardInteriorView
+      model: @model
+      dimensions: [1,2]
 
     @draggable = new Famous.Modifiers.Draggable
       xRange: [-200, 200]
