@@ -19,10 +19,11 @@ class Slidey.Views.CardView extends Famous.View
 
     @draggable = new Famous.Modifiers.Draggable
       xRange: [-200, 200]
-      yRange: [-100, 200]
+      yRange: [-500, 500]
 
     @stateMod = new Famous.StateModifier
       transform: Famous.Transform.rotateZ(0)
+      align: [.5, .05]
       origin: [.5, 0]
 
     cardInterior.pipe(@draggable)
@@ -38,7 +39,7 @@ class Slidey.Views.CardView extends Famous.View
     @stateMod.setTransform(Famous.Transform.identity, trans)
 
   cardExit: (direction) ->
-    trans = {curve : 'easeOutBounce', duration : 3000}
+    trans = {curve : 'easeOutBounce', duration : 1500}
 
     @_eventOutput.emit('card:exit', this.model)
     @draggable.setPosition([-600,0,0], trans) if direction == 'left'

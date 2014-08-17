@@ -1,18 +1,20 @@
-class Slidey.Views.MainView
+class Slidey.Views.MainView extends Famous.View
 
   #
   # Init
 
   constructor: (options) ->
+    super
     @collection = options.collection
-    @layout = new Famous.Views.HeaderFooterLayout
-      headerSize: 50
-      footerSize: 50
+    # @layout = new Famous.Views.HeaderFooterLayout
+    #   headerSize: 50
+    #   footerSize: 50
 
 
     # @createHeader()
     @createContent()
-    @createFooter()
+    @createBackground()
+    # @createFooter() 
 
 
   #
@@ -28,28 +30,32 @@ class Slidey.Views.MainView
 
     content.on('card:enter', @onCardEnter)
 
-    @layout.content.add(content)
+    @add(content)
 
   createFooter: ->
     footer = new Slidey.Views.FooterGridView()
     @layout.footer.add(footer.view)
 
-  createBackground: ->
-    surface = new Famous.ImageSurface
-      content: @model.getImageSrc()
+  createBackground: (model) ->
+    @background = new Famous.ImageSurface
       origin: [0, .5]
-      size: [undefined, 350]
-      classes: ['card']
+      size: [undefined, undefined]
+      classes: ['background-image']
       textAlign: 'center'
 
-  setBackground: ->
-    
+    mod = new Famous.StateModifier
+      opacity: .4
+
+
+    @add(mod).add(@background)
+
+  setBackground: (model) ->
+    @background.setContent(model.getImageSrc())
+
 
 
   #
   # Events
 
   onCardEnter: (model) =>
-
-
-    @layout.content.add()
+    @setBackground(model)

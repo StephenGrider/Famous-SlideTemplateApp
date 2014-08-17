@@ -7,7 +7,7 @@ setTimeout( ->
 
   collection = new Slidey.Collections.Cards()
   mainView = new Slidey.Views.MainView(collection: collection)
-  context.add(mainView.layout)
+  context.add(mainView)
 
 
 

@@ -19,10 +19,10 @@ class Slidey.Views.CardInteriorView extends Famous.View
     surface = new Famous.ImageSurface
       content: @model.getImageSrc()
       origin: [0, .5]
-      size: [undefined, 350]
+      size: [undefined, 425]
       classes: ['card']
       textAlign: 'center'
-      
+
     surface.pipe(@._eventOutput)
     @add(surface)
 
@@ -33,7 +33,7 @@ class Slidey.Views.CardInteriorView extends Famous.View
       classes: ['card-description']
 
     state = new Famous.StateModifier
-      align: [.5, .8]
+      align: [.5, .9]
       origin: [.5, .5]
 
     @add(state).add(surface)

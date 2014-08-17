@@ -7,8 +7,82 @@ setTimeout(function() {
   mainView = new Slidey.Views.MainView({
     collection: collection
   });
-  return context.add(mainView.layout);
+  return context.add(mainView);
 }, 100);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.MainView = (function(_super) {
+  __extends(MainView, _super);
+
+  function MainView(options) {
+    this.onCardEnter = __bind(this.onCardEnter, this);
+    MainView.__super__.constructor.apply(this, arguments);
+    this.collection = options.collection;
+    this.createContent();
+    this.createBackground();
+  }
+
+  MainView.prototype.createHeader = function() {};
+
+  MainView.prototype.createContent = function() {
+    var content;
+    content = new Slidey.Views.CardStackView({
+      collection: this.collection
+    });
+    content.on('card:enter', this.onCardEnter);
+    return this.add(content);
+  };
+
+  MainView.prototype.createFooter = function() {
+    var footer;
+    footer = new Slidey.Views.FooterGridView();
+    return this.layout.footer.add(footer.view);
+  };
+
+  MainView.prototype.createBackground = function(model) {
+    var mod;
+    this.background = new Famous.ImageSurface({
+      origin: [0, .5],
+      size: [void 0, void 0],
+      classes: ['background-image'],
+      textAlign: 'center'
+    });
+    mod = new Famous.StateModifier({
+      opacity: .4
+    });
+    return this.add(mod).add(this.background);
+  };
+
+  MainView.prototype.setBackground = function(model) {
+    return this.background.setContent(model.getImageSrc());
+  };
+
+  MainView.prototype.onCardEnter = function(model) {
+    return this.setBackground(model);
+  };
+
+  return MainView;
+
+})(Famous.View);
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Slidey.Views.Spinner = (function(_super) {
+  __extends(Spinner, _super);
+
+  function Spinner() {
+    Spinner.__super__.constructor.call(this, {
+      content: 'asdf'
+    });
+  }
+
+  return Spinner;
+
+})(Famous.Surface);
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -94,74 +168,6 @@ Slidey.Collections.Cards = (function(_super) {
 
 })(Backbone.Collection);
 
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-Slidey.Views.MainView = (function() {
-  function MainView(options) {
-    this.onCardEnter = __bind(this.onCardEnter, this);
-    this.collection = options.collection;
-    this.layout = new Famous.Views.HeaderFooterLayout({
-      headerSize: 50,
-      footerSize: 50
-    });
-    this.createContent();
-    this.createFooter();
-  }
-
-  MainView.prototype.createHeader = function() {};
-
-  MainView.prototype.createContent = function() {
-    var content;
-    content = new Slidey.Views.CardStackView({
-      collection: this.collection
-    });
-    content.on('card:enter', this.onCardEnter);
-    return this.layout.content.add(content);
-  };
-
-  MainView.prototype.createFooter = function() {
-    var footer;
-    footer = new Slidey.Views.FooterGridView();
-    return this.layout.footer.add(footer.view);
-  };
-
-  MainView.prototype.createBackground = function() {
-    var surface;
-    return surface = new Famous.ImageSurface({
-      content: this.model.getImageSrc(),
-      origin: [0, .5],
-      size: [void 0, 350],
-      classes: ['card'],
-      textAlign: 'center'
-    });
-  };
-
-  MainView.prototype.setBackground = function() {};
-
-  MainView.prototype.onCardEnter = function(model) {
-    return this.layout.content.add();
-  };
-
-  return MainView;
-
-})();
-
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-Slidey.Views.Spinner = (function(_super) {
-  __extends(Spinner, _super);
-
-  function Spinner() {
-    Spinner.__super__.constructor.call(this, {
-      content: 'asdf'
-    });
-  }
-
-  return Spinner;
-
-})(Famous.Surface);
-
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -180,7 +186,7 @@ Slidey.Views.CardInteriorView = (function(_super) {
     surface = new Famous.ImageSurface({
       content: this.model.getImageSrc(),
       origin: [0, .5],
-      size: [void 0, 350],
+      size: [void 0, 425],
       classes: ['card'],
       textAlign: 'center'
     });
@@ -196,7 +202,7 @@ Slidey.Views.CardInteriorView = (function(_super) {
       classes: ['card-description']
     });
     state = new Famous.StateModifier({
-      align: [.5, .8],
+      align: [.5, .9],
       origin: [.5, .5]
     });
     return this.add(state).add(surface);
@@ -273,10 +279,11 @@ Slidey.Views.CardView = (function(_super) {
     });
     this.draggable = new Famous.Modifiers.Draggable({
       xRange: [-200, 200],
-      yRange: [-100, 200]
+      yRange: [-500, 500]
     });
     this.stateMod = new Famous.StateModifier({
       transform: Famous.Transform.rotateZ(0),
+      align: [.5, .05],
       origin: [.5, 0]
     });
     cardInterior.pipe(this.draggable);
@@ -303,7 +310,7 @@ Slidey.Views.CardView = (function(_super) {
     var trans;
     trans = {
       curve: 'easeOutBounce',
-      duration: 3000
+      duration: 1500
     };
     this._eventOutput.emit('card:exit', this.model);
     if (direction === 'left') {

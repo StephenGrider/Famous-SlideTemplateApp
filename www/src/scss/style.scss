@@ -1,5 +1,5 @@
 body {
-  background-color: gray;
+  // background-color: gray;
 }
 
 .double-sided {
@@ -8,6 +8,8 @@ body {
 
 .card {
   background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 6px 8px rgba(0,0,0,0.5);
 }
 
 .card-description {
@@ -16,5 +18,10 @@ body {
 }
 
 * {
-  border: 1px solid black;
+  // border: 1px solid black;
+}
+
+.background-image {
+  // opacity: .3;
+  -webkit-filter: blur(5px);
 }
