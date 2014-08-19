@@ -27,7 +27,9 @@ class Cards extends Backbone.Collection
         (new Image).src = image.getImageSrc()
 
   getMore: =>
-    if @length < 10
+    if @length < 15 && !@fetching
+      @fetching = true
       @fetch()
+        .always( => @fetching = false)
 
 module.exports = Cards
