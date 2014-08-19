@@ -1,2 +1,5 @@
-/node_modules
-api-keys.js
+.DS_Store
+.sass-cache
+build
+Desktop.ini
+node_modules
