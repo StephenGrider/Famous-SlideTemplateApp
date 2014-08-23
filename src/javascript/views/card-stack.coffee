@@ -33,8 +33,6 @@ class CardStackView extends RenderController
   onCardExit: (cardModel) =>
     @collection.remove(cardModel)
     @addCard()
-    console.log @collection
-    @collection.pop()
 
 
 module.exports = CardStackView
