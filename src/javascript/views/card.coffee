@@ -33,7 +33,7 @@ class CardView extends require('famous/core/view')
 
     cardInterior.pipe(@draggable)
 
-    @draggable.on('end', => @onDragEnd(@draggable))
+    @draggable.on('end', @onDragEnd)
     @draggable.on('update', @onDragUpdate)
 
     @.add(@stateMod).add(@draggable).add(cardInterior)
@@ -57,7 +57,7 @@ class CardView extends require('famous/core/view')
   onDragUpdate: =>
     @stateMod.setTransform(Transform.rotateZ(@draggable.getPosition()[0]/800))
 
-  onDragEnd: (@draggable) ->
+  onDragEnd: =>
     distance = @draggable.getPosition()[0]
 
     if distance > 150

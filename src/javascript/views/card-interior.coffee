@@ -13,7 +13,6 @@ class CardInteriorView extends require('famous/core/view')
 
     @showCardImage()
     @showCardAnnotation()
-    # @sequenceFrom([@showCardImage(), @showCardAnnotation()])
 
 
   #
@@ -23,7 +22,7 @@ class CardInteriorView extends require('famous/core/view')
     surface = new ImageSurface
       content: @model.getImageSrc()
       origin: [0, .5]
-      size: [undefined, 425]
+      size: [undefined, 400]
       classes: ['card']
       textAlign: 'center'
 
