@@ -69,3 +69,4 @@ class CardView extends require('famous/core/view')
 
 
 module.exports = CardView
+
