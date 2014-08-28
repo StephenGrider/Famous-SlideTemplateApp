@@ -1,5 +1,4 @@
 Surface = require('famous/core/surface')
-InputSurface = require('famous/surfaces/inputsurface')
 
 class MenuInterior extends require('famous/core/view')
   
@@ -8,9 +7,11 @@ class MenuInterior extends require('famous/core/view')
     @createInput()
     
   createInput: ->
-    view = new InputSurface
-      type: 'text'
-      
+    view = new Surface
+      content: 'hithere'
+      classes: ['test']
+    
+    view.pipe(@._eventOutput)
     @add(view)
   
   

@@ -1,6 +1,6 @@
 Surface = require('famous/core/surface')
 MenuInterior = require('./menu-interior')
-Pulldown = require('./components/pulldown')
+Slideout = require('./components/slideout')
 
 
 class Menu extends require('famous/core/view')
@@ -13,24 +13,20 @@ class Menu extends require('famous/core/view')
     super
     @collection = options.collection
     
-    @createPulldown()
-    
+    @createSlideout()
     
 
   #
   # Control  
   
-  createPulldown: ->
-    pulldown = new Pulldown
+  createSlideout: ->
+    slideout = new Slideout
     
-    @add(pulldown)
+    @add(slideout.stateMod).add(slideout)
     
-    surface = new Surface
-      size: [undefined,30]
-      content: 'hi there'
-      classes: ['test']
-    
-    surface.pipe(pulldown._eventInput)
-    pulldown.add(surface)
+    interior = new MenuInterior
+      
+    interior._eventOutput.pipe(slideout._eventInput)
+    slideout.add(interior)
     
 module.exports = Menu
