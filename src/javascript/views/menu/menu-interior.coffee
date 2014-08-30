@@ -17,9 +17,5 @@ class MenuInterior extends require('famous/core/view')
     view.pipe(@._eventOutput)
     @add(view)
     
-    debugger
-    
-  
-  
-  
+
 module.exports = MenuInterior
