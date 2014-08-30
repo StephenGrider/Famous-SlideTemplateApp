@@ -1,18 +1,23 @@
 Surface = require('famous/core/surface')
+FilterView = require('./filter')
 
 class MenuInterior extends require('famous/core/view')
-  template: require('../../templates/menu') 
   
-  constructor: ->
+  constructor: (options) ->
     super
+    @collection = options.collection
+    
+    @filterList = new FilterView(collection: @collection)
+    
     @createMenuSettings()
+    
     
   createMenuSettings: ->
     view = new Surface
       align: [.5, 1]
       size: [undefined, 400]
       classes: ['test']
-      content: @template()
+      content: @filterList.render().el
     
     view.pipe(@._eventOutput)
     @add(view)

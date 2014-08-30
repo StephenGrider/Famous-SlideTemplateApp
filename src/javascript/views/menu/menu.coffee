@@ -2,7 +2,6 @@ Surface = require('famous/core/surface')
 MenuInterior = require('./menu-interior')
 Slideout = require('../components/slideout')
 
-
 class Menu extends require('famous/core/view')
     
   #
@@ -23,7 +22,7 @@ class Menu extends require('famous/core/view')
     
     @add(slideout.stateMod).add(slideout)
     
-    interior = new MenuInterior
+    interior = new MenuInterior(collection: @collection)
       
     interior._eventOutput.pipe(slideout._eventInput)
     slideout.add(interior)

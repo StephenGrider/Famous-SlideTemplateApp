@@ -1,4 +1,4 @@
-Backbone = require 'Backbone'
+Backbone = require('Backbone')
 
 class Card extends Backbone.Model
   getImageSrc: ->
