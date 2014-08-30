@@ -1,9 +1,9 @@
-CardStack = require('./card-stack')
+CardStack = require('./cards/card-stack')
 ImageSurface = require('famous/surfaces/imagesurface')
 Modifier = require('famous/modifiers/statemodifier')
-Menu = require('./menu')
+Menu = require('./menu/menu')
 
-class MainView extends require('famous/views/headerfooterlayout')
+class MainView extends require('famous/core/view')
 
   #
   # Init
@@ -23,14 +23,14 @@ class MainView extends require('famous/views/headerfooterlayout')
   createMenu: ->
     menu = new Menu(collection: @collection)
       
-    @header.add menu
+    @add menu
 
   createContent: ->
     content = new CardStack(collection: @collection)
 
     content.on('card:enter', @onCardEnter)
 
-    @content.add(content)
+    @add(content)
 
   createBackground: (model) ->
     @background = new ImageSurface
@@ -42,7 +42,7 @@ class MainView extends require('famous/views/headerfooterlayout')
     mod = new Modifier
       opacity: .9
 
-    @content.add(mod).add(@background)
+    @add(mod).add(@background)
 
   setBackground: (model) ->
     @background.setContent(model.getImageSrc())

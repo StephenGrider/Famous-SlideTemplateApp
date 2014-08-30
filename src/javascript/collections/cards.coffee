@@ -1,13 +1,15 @@
-Card = require '../models/card'
-Backbone = require 'Backbone'
+Card = require('../models/card')
+Backbone = require('Backbone')
+API_KEY = require('../API_KEY')
 
 class Cards extends Backbone.Collection
   model: Card
-  url: "https://api.imgur.com/3/gallery/random/random/1"
+  url: "https://api.imgur.com/3/gallery/r/funny/time/day/"
+  page: 1
 
   initialize: ->
     @on('sync', => @prefetchImages())
-    @on('remove', @getMore)
+    @on('remove', @getNextPage)
 
   parse: (response) ->
     response.data
@@ -24,12 +26,20 @@ class Cards extends Backbone.Collection
       if image.get('is_album')
         @remove(image)
       else
-        (new Image).src = image.getImageSrc()
-
-  getMore: =>
+        (new Image).src = image.getImageSrc()    
+    
+  getNextPage: (options) =>
     if @length < 15 && !@fetching
       @fetching = true
-      @fetch()
+      
+      @page++
+      
+      options = 
+         headers: {Authorization :"Client-ID #{API_KEY}"} 
+         url: @url + @page
+      
+      @fetch(options)
         .always( => @fetching = false)
+
 
 module.exports = Cards
