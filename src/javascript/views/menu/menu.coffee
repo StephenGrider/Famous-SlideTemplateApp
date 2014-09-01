@@ -23,7 +23,7 @@ class Menu extends require('famous/core/view')
     @add(slideout.stateMod).add(slideout)
     
     interior = new MenuInterior(collection: @collection)
-      
+    
     interior._eventOutput.pipe(slideout._eventInput)
     slideout.add(interior)
     
