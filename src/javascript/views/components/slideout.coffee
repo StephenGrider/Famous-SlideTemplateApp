@@ -16,8 +16,6 @@ class Slideout extends require('famous/core/view')
     super()
 
     @stateMod = new StateModifier
-      align: [.5, .05]
-      origin: [.5, 1.0]
     
     this._eventInput.on('click', @onClick)
     
