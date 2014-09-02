@@ -1,7 +1,8 @@
 CardStack = require('./cards/card-stack')
 ImageSurface = require('famous/surfaces/imagesurface')
 Modifier = require('famous/modifiers/statemodifier')
-Menu = require('./menu/menu')
+MenuInterior = require('./menu/menu-interior')
+Slideout = require('./components/slideout')
 
 class MainView extends require('famous/core/view')
 
@@ -12,7 +13,7 @@ class MainView extends require('famous/core/view')
     super
     @collection = options.collection
 
-    @createMenu()
+    @createSlideout()
     @createContent()
     @createBackground()
 
@@ -20,17 +21,20 @@ class MainView extends require('famous/core/view')
   #
   # Control
 
-  createMenu: ->
-    menu = new Menu(collection: @collection)
-      
-    @add menu
-
   createContent: ->
     content = new CardStack(collection: @collection)
 
     content.on('card:enter', @onCardEnter)
 
     @add(content)
+    
+  createSlideout: ->
+    slideout = new Slideout
+    @add(slideout.stateMod).add(slideout)
+    
+    interior = new MenuInterior(collection: @collection)
+    interior._eventOutput.pipe(slideout._eventInput)
+    slideout.add(interior)
 
   createBackground: (model) ->
     @background = new ImageSurface
