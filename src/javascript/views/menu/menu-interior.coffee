@@ -1,5 +1,6 @@
 Surface = require('famous/core/surface')
 GridLayout = require('famous/views/gridlayout')
+StateModifier = require('famous/modifiers/statemodifier')
 
 class MenuInterior extends require('famous/core/view')
   
@@ -40,22 +41,25 @@ class MenuInterior extends require('famous/core/view')
   # Control  
   
   createMenu: ->
+    stateMod = new StateModifier
+      size: [undefined, 300]
+    
     grid = new GridLayout
       dimensions: [2,2]
-      
+
     surfaces = []
     grid.sequenceFrom(surfaces)
     
     for filter in @filters
       surface = new Surface
-        size: [200, 200]
         content: filter.name
+        classes: ['test']
       
       surface.filter = filter
       surfaces.push surface
       
       surface.pipe(@_eventOutput)
     
-    @add(grid)
+    @add(stateMod).add(grid)
 
 module.exports = MenuInterior
