@@ -32,7 +32,7 @@ class CardInteriorView extends require('famous/core/view')
   showCardAnnotation: ->
     surface = new Surface
       content: @model.get('title')
-      size: [undefined, 50]
+      size: [undefined, 60]
       classes: ['card-description']
 
     state = new StateModifier

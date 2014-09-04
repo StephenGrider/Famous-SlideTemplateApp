@@ -6,7 +6,7 @@ _ = require('underscore')
 class Cards extends Backbone.Collection
   model: Card
   urlRoot: "https://api.imgur.com/3/gallery/r/"
-  url: "https://api.imgur.com/3/gallery/r/funny/time/day/"
+  url: "https://api.imgur.com/3/gallery/r/pics/time/day/"
   category: 'funny'
   page: 1
 
@@ -39,7 +39,10 @@ class Cards extends Backbone.Collection
   onCategoryChange: =>
     @page = 1
     @getNextPage(reset: true)
-      
+  
+  resetPageIndex: ->
+    @page = 1
+  
   getNextPage: (options = {}) =>
     @fetching = true
     

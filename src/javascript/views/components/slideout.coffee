@@ -17,17 +17,19 @@ class Slideout extends require('famous/core/view')
 
     @stateMod = new StateModifier
     
+    @stateMod.setTransform(Transform.translate(0, -300, 0))
+    
     this._eventInput.on('click', @onClick)
     
   closeSlideout: ->
     @open = false
     trans = curve: 'easeOutBounce', duration: 250
-    @stateMod.setTransform(Transform.identity, trans)
+    @stateMod.setTransform(Transform.translate(0, -300, 0), trans)
 
   openSlideout: ->
     @open = true
     trans = curve: 'easeOutBounce', duration: 250
-    @stateMod.setTransform(Transform.translate(0, 400, 10), trans)
+    @stateMod.setTransform(Transform.translate(0, 0, 10), trans)
 
   #
   # Events
