@@ -1,4 +1,3 @@
-# cb = ->
 $ = require('jquery')
 Backbone = require('backbone')
 Backbone.$ = $
@@ -10,5 +9,3 @@ context = require('famous/core/engine').createContext()
 collection = new CardsCollection
 mainView = new MainView(collection: collection)
 context.add(mainView)
-
-# document.addEventListener("deviceready", cb, false);
