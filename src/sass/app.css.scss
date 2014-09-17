@@ -1,0 +1,50 @@
+@import compass
+@import scss-mixins
+@import typography
+@import famous
+
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 0 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.card-description {
+  text-align: center;
+  font: 16px;
+  box-shadow: 0 0 6px 8px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, .3);
+  color: white;
+}
+
+.background-image {
+  -webkit-filter: blur(7px);
+  z-index: -999;
+}
+
+body {
+  background-color: black;
+}
+  ;
+.menu-bar {
+  background-color: blue;
+  z-index: 10;
+}
+  ;
+.menu-button {
+  text-align: center;
+  font: 16px;
+  box-shadow: 0 0 6px 8px rgba(0, 0, 0, 0.5);
+  background-color: rgba(150, 150, 150, .4);
+  color: black;
+  line-height: 140px;
+}
+
+.selected {
+  background-color: rgba(250, 250, 250, .8);
+}
+
+.settings {
+  color: white;
+  text-align: center;
+}
